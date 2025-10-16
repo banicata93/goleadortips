@@ -78,6 +78,9 @@ const Admin = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [filterTier, setFilterTier] = useState<string>("all");
+  const [filterResult, setFilterResult] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     checkAdminAccess();
@@ -357,6 +360,91 @@ const Admin = () => {
     setMatches([...matches, { ...matchToDuplicate }]);
   };
 
+  // Quick action to mark as WIN
+  const markAsWin = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("predictions")
+        .update({ result: "✅ WIN" })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Marked as WIN",
+      });
+      await fetchPredictions();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Quick action to mark as LOSS
+  const markAsLoss = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("predictions")
+        .update({ result: "❌ LOSS" })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Marked as LOSS",
+      });
+      await fetchPredictions();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Calculate statistics
+  const getStats = () => {
+    const total = predictions.length;
+    const wins = predictions.filter(p => p.result?.includes('WIN') || p.result?.includes('✅')).length;
+    const losses = predictions.filter(p => p.result?.includes('LOSS') || p.result?.includes('❌')).length;
+    const pending = total - wins - losses;
+    const winRate = total > 0 ? ((wins / (wins + losses)) * 100).toFixed(1) : '0';
+    
+    return { total, wins, losses, pending, winRate };
+  };
+
+  // Filter and search predictions
+  const getFilteredPredictions = () => {
+    return predictions.filter(pred => {
+      // Filter by tier
+      if (filterTier !== "all" && pred.tier !== filterTier) return false;
+      
+      // Filter by result
+      if (filterResult === "win" && !(pred.result?.includes('WIN') || pred.result?.includes('✅'))) return false;
+      if (filterResult === "loss" && !(pred.result?.includes('LOSS') || pred.result?.includes('❌'))) return false;
+      if (filterResult === "pending" && pred.result) return false;
+      
+      // Search query
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesDate = pred.prediction_date.includes(query);
+        const matchesMatch = pred.matches?.some(m => 
+          m.match_name.toLowerCase().includes(query) || 
+          m.prediction.toLowerCase().includes(query)
+        );
+        if (!matchesDate && !matchesMatch) return false;
+      }
+      
+      return true;
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -369,6 +457,9 @@ const Admin = () => {
     return null;
   }
 
+  const stats = getStats();
+  const filteredPredictions = getFilteredPredictions();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -379,9 +470,33 @@ const Admin = () => {
             <h1 className="text-4xl font-bold">Admin Panel</h1>
             <div className="flex gap-2">
               <Badge variant="secondary">
-                {predictions.length} total predictions
+                {predictions.length} total
               </Badge>
             </div>
+          </div>
+
+          {/* Statistics Dashboard */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            <Card className="p-4">
+              <div className="text-sm text-muted-foreground mb-1">Total</div>
+              <div className="text-2xl font-bold">{stats.total}</div>
+            </Card>
+            <Card className="p-4 bg-green-50 dark:bg-green-950">
+              <div className="text-sm text-muted-foreground mb-1">Wins</div>
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.wins}</div>
+            </Card>
+            <Card className="p-4 bg-red-50 dark:bg-red-950">
+              <div className="text-sm text-muted-foreground mb-1">Losses</div>
+              <div className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.losses}</div>
+            </Card>
+            <Card className="p-4 bg-yellow-50 dark:bg-yellow-950">
+              <div className="text-sm text-muted-foreground mb-1">Pending</div>
+              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.pending}</div>
+            </Card>
+            <Card className="p-4 bg-blue-50 dark:bg-blue-950">
+              <div className="text-sm text-muted-foreground mb-1">Win Rate</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.winRate}%</div>
+            </Card>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8 mb-12">
@@ -643,15 +758,62 @@ const Admin = () => {
             </Card>
 
             <Card className="p-6 max-h-[800px] overflow-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Recent Predictions</h2>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Predictions</h2>
                 <Badge variant="secondary">
-                  {predictions.length} total
+                  {filteredPredictions.length} / {predictions.length}
                 </Badge>
               </div>
 
+              {/* Filters and Search */}
+              <div className="space-y-3 mb-6">
+                <Input
+                  placeholder="Search by date or match name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full"
+                />
+                <div className="flex gap-2">
+                  <Select value={filterTier} onValueChange={setFilterTier}>
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="All Tiers" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Tiers</SelectItem>
+                      <SelectItem value="silver">Silver</SelectItem>
+                      <SelectItem value="gold">Gold</SelectItem>
+                      <SelectItem value="platinum">Platinum</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={filterResult} onValueChange={setFilterResult}>
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="All Results" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Results</SelectItem>
+                      <SelectItem value="win">Wins Only</SelectItem>
+                      <SelectItem value="loss">Losses Only</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {(filterTier !== "all" || filterResult !== "all" || searchQuery) && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setFilterTier("all");
+                        setFilterResult("all");
+                        setSearchQuery("");
+                      }}
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-4">
-                {predictions.slice(0, 15).map((prediction) => (
+                {filteredPredictions.map((prediction) => (
                   <Card key={prediction.id} className="p-4 hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex-1">
@@ -678,10 +840,33 @@ const Admin = () => {
                         </div>
                       </div>
                       <div className="flex gap-1">
+                        {!prediction.result && (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-green-50 hover:bg-green-100 dark:bg-green-950 dark:hover:bg-green-900 text-green-700 dark:text-green-300"
+                              onClick={() => markAsWin(prediction.id)}
+                              title="Mark as WIN"
+                            >
+                              ✅
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-red-50 hover:bg-red-100 dark:bg-red-950 dark:hover:bg-red-900 text-red-700 dark:text-red-300"
+                              onClick={() => markAsLoss(prediction.id)}
+                              title="Mark as LOSS"
+                            >
+                              ❌
+                            </Button>
+                          </>
+                        )}
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleEdit(prediction)}
+                          title="Edit"
                         >
                           <Edit className="h-3 w-3" />
                         </Button>
@@ -689,6 +874,7 @@ const Admin = () => {
                           size="sm"
                           variant="destructive"
                           onClick={() => handleDelete(prediction.id)}
+                          title="Delete"
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -722,6 +908,11 @@ const Admin = () => {
                   </Card>
                 ))}
 
+                {filteredPredictions.length === 0 && predictions.length > 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No predictions match your filters. Try adjusting the filters above.
+                  </div>
+                )}
                 {predictions.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     No predictions yet. Add your first prediction above!
