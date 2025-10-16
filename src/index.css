@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 26% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 20% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 20% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 142 76% 45%;
+    --primary-foreground: 220 26% 8%;
+
+    --secondary: 220 20% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 15% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 142 76% 45%;
+    --accent-foreground: 220 26% 8%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 142 76% 45%;
+
+    --radius: 0.75rem;
+
+    /* Premium tier colors */
+    --silver: 210 8% 75%;
+    --silver-glow: 210 10% 85%;
+    --gold: 45 100% 51%;
+    --gold-glow: 45 100% 65%;
+    --platinum: 265 75% 65%;
+    --platinum-glow: 265 85% 75%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(220 26% 8%) 0%, hsl(220 26% 12%) 50%, hsl(142 76% 10%) 100%);
+    --gradient-silver: linear-gradient(135deg, hsl(210 8% 60%) 0%, hsl(210 10% 75%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(35 100% 45%) 0%, hsl(45 100% 55%) 100%);
+    --gradient-platinum: linear-gradient(135deg, hsl(255 75% 55%) 0%, hsl(275 85% 65%) 100%);
+
+    --sidebar-background: 220 20% 12%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 142 76% 45%;
+    --sidebar-primary-foreground: 220 26% 8%;
+    --sidebar-accent: 220 20% 18%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 220 15% 20%;
+    --sidebar-ring: 142 76% 45%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Background grid pattern for decorative elements */
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
