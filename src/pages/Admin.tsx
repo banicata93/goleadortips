@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Plus, Trash2, Edit, X, Copy, Calculator, RotateCcw } from "lucide-react";
+import { Loader2, Plus, Trash2, Edit, X, Copy, Calculator, RotateCcw, Calendar } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
@@ -51,8 +51,24 @@ const MATCH_TEMPLATES = {
     "Bayern Munich", "Borussia Dortmund", "RB Leipzig", "Bayer Leverkusen"
   ],
   predictions: [
-    "Home Win", "Away Win", "Draw", "Over 1.5 Goals", "Over 2.5 Goals", "Under 2.5 Goals",
-    "Both Teams to Score", "Clean Sheet", "First Goal", "Last Goal"
+    { label: "Home Win (1)", value: "Home Win", avgOdds: "2.00" },
+    { label: "Away Win (2)", value: "Away Win", avgOdds: "3.50" },
+    { label: "Draw (X)", value: "Draw", avgOdds: "3.20" },
+    { label: "1X (Home or Draw)", value: "1X", avgOdds: "1.30" },
+    { label: "X2 (Draw or Away)", value: "X2", avgOdds: "1.70" },
+    { label: "12 (Home or Away)", value: "12", avgOdds: "1.25" },
+    { label: "Over 1.5 Goals", value: "Over 1.5", avgOdds: "1.30" },
+    { label: "Over 2.5 Goals", value: "Over 2.5", avgOdds: "1.80" },
+    { label: "Over 3.5 Goals", value: "Over 3.5", avgOdds: "2.80" },
+    { label: "Under 2.5 Goals", value: "Under 2.5", avgOdds: "1.70" },
+    { label: "Under 3.5 Goals", value: "Under 3.5", avgOdds: "1.40" },
+    { label: "BTTS Yes", value: "BTTS Yes", avgOdds: "1.85" },
+    { label: "BTTS No", value: "BTTS No", avgOdds: "1.90" },
+    { label: "Home Win & Over 2.5", value: "Home Win & Over 2.5", avgOdds: "3.50" },
+    { label: "Away Win & Over 2.5", value: "Away Win & Over 2.5", avgOdds: "5.50" },
+    { label: "Home Win & BTTS", value: "Home Win & BTTS", avgOdds: "4.00" },
+    { label: "Clean Sheet Home", value: "Clean Sheet Home", avgOdds: "2.20" },
+    { label: "Clean Sheet Away", value: "Clean Sheet Away", avgOdds: "3.00" }
   ]
 };
 
@@ -324,7 +340,9 @@ const Admin = () => {
   };
 
   const addMatch = () => {
-    setMatches([...matches, { match_date: new Date().toISOString().split('T')[0], match_name: "", prediction: "", odds: "" }]);
+    // Use prediction_date for new matches
+    const newMatchDate = formData.prediction_date || new Date().toISOString().split('T')[0];
+    setMatches([...matches, { match_date: newMatchDate, match_name: "", prediction: "", odds: "" }]);
   };
 
   const removeMatch = (index: number) => {
@@ -343,6 +361,14 @@ const Admin = () => {
     const newMatches = [...matches];
     newMatches[index] = { ...newMatches[index], [field]: value };
     setMatches(newMatches);
+    
+    // Auto-calculate total odds when odds change
+    if (field === 'odds') {
+      const totalOdds = calculateTotalOdds();
+      if (totalOdds > 0) {
+        setFormData({ ...formData, ticket_odds: totalOdds.toFixed(2) });
+      }
+    }
   };
 
   const applyTemplate = (template: string, index: number) => {
@@ -358,6 +384,72 @@ const Admin = () => {
   const duplicateMatch = (index: number) => {
     const matchToDuplicate = matches[index];
     setMatches([...matches, { ...matchToDuplicate }]);
+  };
+
+  // Fill all match dates with prediction date
+  const fillAllDates = () => {
+    const newMatches = matches.map(m => ({
+      ...m,
+      match_date: formData.prediction_date
+    }));
+    setMatches(newMatches);
+    toast({
+      title: "Dates Updated",
+      description: `All match dates set to ${formData.prediction_date}`,
+    });
+  };
+
+  // Apply prediction template with average odds
+  const applyPredictionTemplate = (index: number, template: typeof MATCH_TEMPLATES.predictions[0]) => {
+    const newMatches = [...matches];
+    newMatches[index] = {
+      ...newMatches[index],
+      prediction: template.value,
+      odds: template.avgOdds
+    };
+    setMatches(newMatches);
+    
+    // Auto-calculate total odds
+    setTimeout(() => {
+      const totalOdds = calculateTotalOdds();
+      if (totalOdds > 0) {
+        setFormData({ ...formData, ticket_odds: totalOdds.toFixed(2) });
+      }
+    }, 100);
+  };
+
+  // Copy last prediction
+  const copyLastPrediction = () => {
+    if (predictions.length === 0) {
+      toast({
+        title: "No predictions",
+        description: "No previous predictions to copy",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const lastPred = predictions[0];
+    setFormData({
+      prediction_date: new Date().toISOString().split('T')[0],
+      tier: lastPred.tier,
+      result: "",
+      ticket_odds: lastPred.ticket_odds?.toString() || "",
+    });
+    
+    if (lastPred.matches && lastPred.matches.length > 0) {
+      setMatches(lastPred.matches.map(m => ({
+        match_date: new Date().toISOString().split('T')[0],
+        match_name: m.match_name,
+        prediction: m.prediction,
+        odds: m.odds?.toString() || ""
+      })));
+    }
+    
+    toast({
+      title: "Copied!",
+      description: "Last prediction copied. Update dates and details.",
+    });
   };
 
   // Quick action to mark as WIN
@@ -506,6 +598,18 @@ const Admin = () => {
                   {editingId ? "Edit Prediction" : "Add New Prediction"}
                 </h2>
                 <div className="flex gap-2">
+                  {predictions.length > 0 && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={copyLastPrediction}
+                      title="Copy last prediction"
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy Last
+                    </Button>
+                  )}
                   <Button
                     type="button"
                     size="sm"
@@ -513,7 +617,7 @@ const Admin = () => {
                     onClick={() => setFormData({ ...formData, ticket_odds: calculateTotalOdds().toFixed(2) })}
                   >
                     <Calculator className="h-4 w-4 mr-2" />
-                    Calc Odds
+                    Calc
                   </Button>
                   <Button
                     type="button"
@@ -587,6 +691,18 @@ const Admin = () => {
                   <div className="flex justify-between items-center">
                     <h3 className="text-lg font-semibold">Matches ({matches.length})</h3>
                     <div className="flex gap-2">
+                      {matches.length > 1 && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={fillAllDates}
+                          title="Set all match dates to prediction date"
+                        >
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Fill Dates
+                        </Button>
+                      )}
                       <Button
                         type="button"
                         size="sm"
@@ -604,17 +720,17 @@ const Admin = () => {
 
                   {showTemplates && (
                     <Card className="p-4 bg-muted/50">
-                      <h4 className="font-semibold mb-3">Quick Templates</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                      <h4 className="font-semibold mb-3">Quick Templates (click to apply to last match)</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div>
                           <div className="font-medium mb-2">Popular Teams:</div>
                           <div className="space-y-1">
-                            {MATCH_TEMPLATES.teams.slice(0, 5).map(team => (
+                            {MATCH_TEMPLATES.teams.slice(0, 8).map(team => (
                               <Button
                                 key={team}
                                 size="sm"
                                 variant="ghost"
-                                className="h-auto p-1 text-xs justify-start"
+                                className="h-auto p-1 text-xs justify-start w-full"
                                 onClick={() => applyTemplate(`Team: ${team}`, matches.length - 1)}
                               >
                                 {team}
@@ -625,31 +741,15 @@ const Admin = () => {
                         <div>
                           <div className="font-medium mb-2">Prediction Types:</div>
                           <div className="space-y-1">
-                            {MATCH_TEMPLATES.predictions.map(pred => (
+                            {MATCH_TEMPLATES.predictions.slice(0, 8).map(pred => (
                               <Button
-                                key={pred}
+                                key={pred.value}
                                 size="sm"
                                 variant="ghost"
-                                className="h-auto p-1 text-xs justify-start"
-                                onClick={() => applyTemplate(`Prediction: ${pred}`, matches.length - 1)}
+                                className="h-auto p-1 text-xs justify-start w-full"
+                                onClick={() => applyPredictionTemplate(matches.length - 1, pred)}
                               >
-                                {pred}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="font-medium mb-2">Leagues:</div>
-                          <div className="space-y-1">
-                            {MATCH_TEMPLATES.leagues.map(league => (
-                              <Button
-                                key={league}
-                                size="sm"
-                                variant="ghost"
-                                className="h-auto p-1 text-xs justify-start"
-                                onClick={() => applyTemplate(`Team: ${league}`, matches.length - 1)}
-                              >
-                                {league}
+                                {pred.label} - {pred.avgOdds}
                               </Button>
                             ))}
                           </div>
@@ -708,7 +808,24 @@ const Admin = () => {
                             />
                           </div>
                           <div>
-                            <label className="text-xs font-medium mb-1 block">Prediction</label>
+                            <label className="text-xs font-medium mb-1 flex justify-between items-center">
+                              <span>Prediction</span>
+                              <Select onValueChange={(value) => {
+                                const template = MATCH_TEMPLATES.predictions.find(p => p.value === value);
+                                if (template) applyPredictionTemplate(index, template);
+                              }}>
+                                <SelectTrigger className="w-[120px] h-6 text-xs">
+                                  <SelectValue placeholder="Quick pick" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {MATCH_TEMPLATES.predictions.map((pred) => (
+                                    <SelectItem key={pred.value} value={pred.value} className="text-xs">
+                                      {pred.label} ({pred.avgOdds})
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </label>
                             <Input
                               value={match.prediction}
                               onChange={(e) => updateMatch(index, "prediction", e.target.value)}
@@ -718,7 +835,9 @@ const Admin = () => {
                             />
                           </div>
                           <div>
-                            <label className="text-xs font-medium mb-1 block">Odds</label>
+                            <label className="text-xs font-medium mb-1 block">
+                              Odds <span className="text-muted-foreground font-normal">(auto-calc total)</span>
+                            </label>
                             <Input
                               type="number"
                               step="0.01"
