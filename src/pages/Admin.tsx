@@ -51,24 +51,24 @@ const MATCH_TEMPLATES = {
     "Bayern Munich", "Borussia Dortmund", "RB Leipzig", "Bayer Leverkusen"
   ],
   predictions: [
-    { label: "Home Win (1)", value: "Home Win", avgOdds: "2.00" },
-    { label: "Away Win (2)", value: "Away Win", avgOdds: "3.50" },
-    { label: "Draw (X)", value: "Draw", avgOdds: "3.20" },
-    { label: "1X (Home or Draw)", value: "1X", avgOdds: "1.30" },
-    { label: "X2 (Draw or Away)", value: "X2", avgOdds: "1.70" },
-    { label: "12 (Home or Away)", value: "12", avgOdds: "1.25" },
-    { label: "Over 1.5 Goals", value: "Over 1.5", avgOdds: "1.30" },
-    { label: "Over 2.5 Goals", value: "Over 2.5", avgOdds: "1.80" },
-    { label: "Over 3.5 Goals", value: "Over 3.5", avgOdds: "2.80" },
-    { label: "Under 2.5 Goals", value: "Under 2.5", avgOdds: "1.70" },
-    { label: "Under 3.5 Goals", value: "Under 3.5", avgOdds: "1.40" },
-    { label: "BTTS Yes", value: "BTTS Yes", avgOdds: "1.85" },
-    { label: "BTTS No", value: "BTTS No", avgOdds: "1.90" },
-    { label: "Home Win & Over 2.5", value: "Home Win & Over 2.5", avgOdds: "3.50" },
-    { label: "Away Win & Over 2.5", value: "Away Win & Over 2.5", avgOdds: "5.50" },
-    { label: "Home Win & BTTS", value: "Home Win & BTTS", avgOdds: "4.00" },
-    { label: "Clean Sheet Home", value: "Clean Sheet Home", avgOdds: "2.20" },
-    { label: "Clean Sheet Away", value: "Clean Sheet Away", avgOdds: "3.00" }
+    "1 (Home Win)",
+    "X (Draw)",
+    "2 (Away Win)",
+    "1X",
+    "X2",
+    "12",
+    "Over 1.5",
+    "Over 2.5",
+    "Over 3.5",
+    "Under 2.5",
+    "Under 3.5",
+    "BTTS Yes",
+    "BTTS No",
+    "Home Win & Over 2.5",
+    "Away Win & Over 2.5",
+    "Home Win & BTTS",
+    "Clean Sheet Home",
+    "Clean Sheet Away"
   ]
 };
 
@@ -399,23 +399,14 @@ const Admin = () => {
     });
   };
 
-  // Apply prediction template with average odds
-  const applyPredictionTemplate = (index: number, template: typeof MATCH_TEMPLATES.predictions[0]) => {
+  // Apply prediction template (without odds)
+  const applyPredictionTemplate = (index: number, template: string) => {
     const newMatches = [...matches];
     newMatches[index] = {
       ...newMatches[index],
-      prediction: template.value,
-      odds: template.avgOdds
+      prediction: template
     };
     setMatches(newMatches);
-    
-    // Auto-calculate total odds
-    setTimeout(() => {
-      const totalOdds = calculateTotalOdds();
-      if (totalOdds > 0) {
-        setFormData({ ...formData, ticket_odds: totalOdds.toFixed(2) });
-      }
-    }, 100);
   };
 
   // Copy last prediction
@@ -677,11 +668,35 @@ const Admin = () => {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Result</label>
-                    <Input
-                      placeholder="e.g. WIN, LOST, or leave empty"
-                      value={formData.result}
-                      onChange={(e) => setFormData({ ...formData, result: e.target.value })}
-                    />
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant={formData.result === "✅ WIN" ? "default" : "outline"}
+                        className={formData.result === "✅ WIN" ? "bg-green-600 hover:bg-green-700" : ""}
+                        onClick={() => setFormData({ ...formData, result: "✅ WIN" })}
+                      >
+                        ✅ WIN
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={formData.result === "❌ LOSS" ? "default" : "outline"}
+                        className={formData.result === "❌ LOSS" ? "bg-red-600 hover:bg-red-700" : ""}
+                        onClick={() => setFormData({ ...formData, result: "❌ LOSS" })}
+                      >
+                        ❌ LOSS
+                      </Button>
+                      {formData.result && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setFormData({ ...formData, result: "" })}
+                          title="Clear result"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -741,15 +756,15 @@ const Admin = () => {
                         <div>
                           <div className="font-medium mb-2">Prediction Types:</div>
                           <div className="space-y-1">
-                            {MATCH_TEMPLATES.predictions.slice(0, 8).map(pred => (
+                            {MATCH_TEMPLATES.predictions.slice(0, 10).map(pred => (
                               <Button
-                                key={pred.value}
+                                key={pred}
                                 size="sm"
                                 variant="ghost"
                                 className="h-auto p-1 text-xs justify-start w-full"
                                 onClick={() => applyPredictionTemplate(matches.length - 1, pred)}
                               >
-                                {pred.label} - {pred.avgOdds}
+                                {pred}
                               </Button>
                             ))}
                           </div>
@@ -810,17 +825,14 @@ const Admin = () => {
                           <div>
                             <label className="text-xs font-medium mb-1 flex justify-between items-center">
                               <span>Prediction</span>
-                              <Select onValueChange={(value) => {
-                                const template = MATCH_TEMPLATES.predictions.find(p => p.value === value);
-                                if (template) applyPredictionTemplate(index, template);
-                              }}>
-                                <SelectTrigger className="w-[120px] h-6 text-xs">
+                              <Select onValueChange={(value) => applyPredictionTemplate(index, value)}>
+                                <SelectTrigger className="w-[140px] h-6 text-xs">
                                   <SelectValue placeholder="Quick pick" />
                                 </SelectTrigger>
                                 <SelectContent>
                                   {MATCH_TEMPLATES.predictions.map((pred) => (
-                                    <SelectItem key={pred.value} value={pred.value} className="text-xs">
-                                      {pred.label} ({pred.avgOdds})
+                                    <SelectItem key={pred} value={pred} className="text-xs">
+                                      {pred}
                                     </SelectItem>
                                   ))}
                                 </SelectContent>
