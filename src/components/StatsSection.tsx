@@ -7,13 +7,13 @@ const StatsSection = () => {
   const stats = [
     {
       icon: TrendingUp,
-      value: "78%",
+      value: "89%",
       label: "Success Rate",
       description: "Average win rate across all packages",
       color: "text-emerald-600",
       bgColor: "bg-gradient-to-br from-emerald-50 via-emerald-100/80 to-emerald-200/60 dark:from-emerald-950/50 dark:via-emerald-900/40 dark:to-emerald-800/60",
       accentColor: "from-emerald-500 to-emerald-600",
-      progress: 78,
+      progress: 89,
     },
     {
       icon: Target,
@@ -37,7 +37,7 @@ const StatsSection = () => {
     },
     {
       icon: Users,
-      value: "5,000+",
+      value: "82",
       label: "Active Members",
       description: "Trusted by thousands worldwide",
       color: "text-purple-600",
@@ -51,33 +51,32 @@ const StatsSection = () => {
     {
       tier: "Silver",
       winRate: "94%",
-      avgOdds: "2.0",
-      monthlyTips: "30+",
-      color: "border-slate-300 dark:border-slate-600",
-      bgColor: "bg-gradient-to-br from-slate-50/90 via-white to-slate-100/80 dark:from-slate-900/60 dark:via-slate-800/50 dark:to-slate-700/60",
+      avgOdds: "1.80",
+      dailyTips: "30+",
+      color: "border-blue-300 dark:border-blue-500",
+      bgColor: "bg-gradient-to-br from-blue-50/90 via-blue-100/80 to-blue-200/70 dark:from-blue-950/70 dark:via-blue-900/60 dark:to-blue-800/70",
       icon: Star,
-      iconColor: "text-slate-600 dark:text-slate-300",
-      accentColor: "from-slate-400 to-slate-500",
+      iconColor: "text-blue-700 dark:text-blue-200",
+      accentColor: "from-blue-500 to-blue-600",
       progress: 94,
     },
     {
       tier: "Gold",
       winRate: "87%",
       avgOdds: "3.5",
-      monthlyTips: "25+",
+      dailyTips: "25+",
       color: "border-amber-300 dark:border-amber-600",
       bgColor: "bg-gradient-to-br from-amber-50/90 via-yellow-50/80 to-orange-100/70 dark:from-amber-950/60 dark:via-amber-900/50 dark:to-orange-900/60",
       icon: Crown,
       iconColor: "text-amber-600 dark:text-amber-300",
       accentColor: "from-amber-400 to-amber-600",
-      popular: true,
       progress: 87,
     },
     {
       tier: "Platinum",
       winRate: "77%",
       avgOdds: "9.0",
-      monthlyTips: "15+",
+      dailyTips: "15+",
       color: "border-purple-300 dark:border-purple-600",
       bgColor: "bg-gradient-to-br from-purple-50/90 via-pink-50/80 to-purple-100/70 dark:from-purple-950/60 dark:via-purple-900/50 dark:to-purple-800/60",
       icon: Zap,
@@ -191,14 +190,6 @@ const StatsSection = () => {
                 className={`group relative overflow-hidden border-2 ${tier.color} ${tier.bgColor} animate-fade-in hover:shadow-2xl hover:shadow-primary/5 transition-all duration-700 hover:-translate-y-2`}
                 style={{ animationDelay: `${(index + 6) * 200}ms` }}
               >
-                {tier.popular && (
-                  <div className="absolute -top-2 -right-2 z-10">
-                    <div className="bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-white text-sm font-bold px-4 py-2 rounded-2xl shadow-xl border-2 border-white/20 transform rotate-12">
-                      ⭐ MOST POPULAR
-                    </div>
-                  </div>
-                )}
-
                 <div className="relative p-8">
                   {/* Enhanced icon container */}
                   <div className="flex items-center justify-center mb-6">
@@ -248,8 +239,8 @@ const StatsSection = () => {
                         <div className="text-xl font-bold text-foreground">{tier.avgOdds}</div>
                       </div>
                       <div className="text-center p-3 rounded-xl bg-muted/10">
-                        <div className="text-sm text-muted-foreground mb-1">Monthly Tips</div>
-                        <div className="text-xl font-bold text-foreground">{tier.monthlyTips}</div>
+                        <div className="text-sm text-muted-foreground mb-1">Daily Tips</div>
+                        <div className="text-xl font-bold text-foreground">{tier.dailyTips}</div>
                       </div>
                     </div>
                   </div>

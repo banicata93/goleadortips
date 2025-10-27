@@ -1,26 +1,34 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface SubscriptionCardProps {
   tier: "silver" | "gold" | "platinum";
   title: string;
-  price: string;
   features: string[];
   description: string;
   odds?: string;
-  popular?: boolean;
 }
 
 const SubscriptionCard = ({
   tier,
   title,
-  price,
   features,
   description,
   odds,
-  popular = false,
 }: SubscriptionCardProps) => {
+  const [period, setPeriod] = useState<'daily' | '15days'>('daily');
+  
+  // Price mapping for each tier and period
+  const priceMap = {
+    silver: { daily: "€39", "15days": "€390" },
+    gold: { daily: "€59", "15days": "€590" },
+    platinum: { daily: "€99", "15days": "€990" },
+  };
+  
+  const currentPrice = priceMap[tier][period];
   const tierColors = {
     silver: "border-silver/30",
     gold: "border-gold/30",
@@ -47,17 +55,24 @@ const SubscriptionCard = ({
     <Card
       className={`relative p-6 md:p-8 border-2 ${tierColors[tier]} bg-gradient-to-br ${tierGradients[tier]} hover:scale-105 transition-transform duration-300 animate-fade-in`}
     >
-      {popular && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-3 md:px-4 py-1 bg-primary text-primary-foreground text-xs md:text-sm font-semibold rounded-full">
-          Most Popular
-        </div>
-      )}
-
       <div className="text-center mb-4 md:mb-6">
         <h3 className="text-2xl md:text-3xl font-bold mb-2">{title}</h3>
+        
+        <div className="mb-4">
+          <Select value={period} onValueChange={(value: 'daily' | '15days') => setPeriod(value)}>
+            <SelectTrigger className="w-full max-w-[200px] mx-auto">
+              <SelectValue placeholder="Select period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="daily">Daily</SelectItem>
+              <SelectItem value="15days">15 Days</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
         <div className="text-3xl md:text-4xl font-bold mb-2 md:mb-3">
-          <span className={`bg-gradient-${tier} bg-clip-text text-transparent`}>{price}</span>
-          <span className="text-base md:text-lg text-muted-foreground">/month</span>
+          <span className={`bg-gradient-${tier} bg-clip-text text-transparent`}>{currentPrice}</span>
+          <span className="text-base md:text-lg text-muted-foreground">/{period === 'daily' ? 'day' : '15 days'}</span>
         </div>
         <p className="text-xs md:text-sm text-muted-foreground">{description}</p>
         {odds && (

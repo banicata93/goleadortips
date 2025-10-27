@@ -13,6 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import { Loader2, Plus, Trash2, Edit, X, Copy, Calculator, RotateCcw, Calendar } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import AIImportDialog from "@/components/AIImportDialog";
+import type { AIPrediction } from "@/lib/aiPredictionParser";
 
 interface PredictionMatch {
   id?: string;
@@ -410,6 +412,34 @@ const Admin = () => {
   };
 
   // Copy last prediction
+  const handleAIImport = (predictions: AIPrediction[]) => {
+    if (predictions.length === 0) return;
+    
+    // Import first prediction into the form
+    const pred = predictions[0];
+    
+    setFormData({
+      prediction_date: pred.prediction_date,
+      tier: pred.tier,
+      result: pred.result || "",
+      ticket_odds: pred.ticket_odds?.toString() || "",
+    });
+    
+    setMatches(pred.matches.map(m => ({
+      match_date: m.match_date,
+      match_name: m.match_name,
+      prediction: m.prediction,
+      odds: m.odds.toString()
+    })));
+    
+    toast({
+      title: "AI Data Imported!",
+      description: `Loaded ${pred.tier} prediction with ${pred.matches.length} match(es). ${predictions.length > 1 ? `${predictions.length - 1} more prediction(s) available.` : ''}`,
+    });
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const copyLastPrediction = () => {
     if (predictions.length === 0) {
       toast({
@@ -589,6 +619,7 @@ const Admin = () => {
                   {editingId ? "Edit Prediction" : "Add New Prediction"}
                 </h2>
                 <div className="flex gap-2">
+                  <AIImportDialog onImport={handleAIImport} onBulkSave={fetchPredictions} />
                   {predictions.length > 0 && (
                     <Button
                       type="button"

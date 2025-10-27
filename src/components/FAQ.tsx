@@ -10,12 +10,12 @@ const FAQ = () => {
     {
       question: "How accurate are your predictions?",
       answer:
-        "Our predictions have an average success rate of 78% across all packages. Silver package maintains 72%, Gold achieves 78%, and Platinum reaches 65% (with higher odds). We maintain full transparency with our prediction archives available for review.",
+        "Our predictions have an average success rate of 89% across all packages. Silver package maintains 94%, Gold achieves 87%, and Platinum reaches 77% (with higher odds). We maintain full transparency with our prediction archives available for review.",
     },
     {
       question: "What's the difference between the packages?",
       answer:
-        "Silver offers daily single predictions with odds around 2.0. Gold provides accumulator tips with odds 3.0-4.0 and priority support. Platinum delivers VIP predictions with odds 8.0-10.0, personalized alerts, and 24/7 dedicated support.",
+        "Silver offers daily single predictions with odds around 1.70-1.90. Gold provides accumulator tips with odds 3.0-4.0 and priority support. Platinum delivers VIP predictions with odds 8.0-10.0, personalized alerts, and 24/7 dedicated support.",
     },
     {
       question: "How do I receive the predictions?",

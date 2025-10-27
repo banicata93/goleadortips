@@ -46,7 +46,7 @@ const TermsOfService = () => {
                   <strong>3.2 Subscription Tiers:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Silver Package: 1 prediction/week with odds around 2.00</li>
+                  <li>Silver Package: 1 prediction/week with odds around 1.70-1.90</li>
                   <li>Gold Package: 1 prediction/week with odds around 3-4</li>
                   <li>Platinum Package: 1 prediction/week with odds around 8-10</li>
                 </ul>

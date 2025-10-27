@@ -8,9 +8,8 @@ const Services = () => {
     {
       tier: "silver" as const,
       title: "Silver Package",
-      price: "$29",
       description: "Kickstart Your Predictions ⚽",
-      odds: "Around 2.00",
+      odds: "Around 1.70-1.90",
       features: [
         "Daily curated soccer predictions",
         "Access to standard match insights",
@@ -24,7 +23,6 @@ const Services = () => {
     {
       tier: "gold" as const,
       title: "Gold Package",
-      price: "$59",
       description: "Step Up Your Game 🏆",
       odds: "Around 3.00-4.00",
       features: [
@@ -36,12 +34,10 @@ const Services = () => {
       ],
       fullDescription:
         "Elevate your football predictions. Be ahead of the game and enjoy smarter, more profitable forecasts.",
-      popular: true,
     },
     {
       tier: "platinum" as const,
       title: "Platinum Package",
-      price: "$99",
       description: "The VIP Experience 🔥",
       odds: "Around 8.00-10.00",
       features: [
@@ -81,11 +77,9 @@ const Services = () => {
                 key={sub.tier}
                 tier={sub.tier}
                 title={sub.title}
-                price={sub.price}
                 features={sub.features}
                 description={sub.description}
                 odds={sub.odds}
-                popular={sub.popular}
               />
             ))}
           </div>

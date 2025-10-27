@@ -15,22 +15,18 @@ const Index = () => {
     {
       tier: "silver" as const,
       title: "Silver",
-      price: "$29",
       features: ["Daily predictions", "Standard insights", "Email support"],
       description: "Perfect for beginners",
     },
     {
       tier: "gold" as const,
       title: "Gold",
-      price: "$59",
       features: ["All Silver features", "High-confidence tips", "Priority support"],
       description: "Most popular choice",
-      popular: true,
     },
     {
       tier: "platinum" as const,
       title: "Platinum",
-      price: "$99",
       features: ["All Gold features", "VIP predictions", "24/7 support"],
       description: "For professionals",
     },
@@ -45,7 +41,7 @@ const Index = () => {
     {
       icon: TrendingUp,
       title: "High Success Rate",
-      description: "Consistently delivering winning predictions month after month",
+      description: "Consistently delivering winning predictions day after day",
     },
     {
       icon: Target,
@@ -144,10 +140,8 @@ const Index = () => {
                 key={sub.tier}
                 tier={sub.tier}
                 title={sub.title}
-                price={sub.price}
                 features={sub.features}
                 description={sub.description}
-                popular={sub.popular}
               />
             ))}
           </div>
