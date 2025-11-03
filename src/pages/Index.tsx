@@ -7,6 +7,9 @@ import StatsSection from "@/components/StatsSection";
 import FAQ from "@/components/FAQ";
 import SEO from "@/components/SEO";
 import TrustBadges from "@/components/TrustBadges";
+import TrustSeals from "@/components/TrustSeals";
+import FeaturedIn from "@/components/FeaturedIn";
+import LiveActivityNotification from "@/components/LiveActivityNotification";
 import { Button } from "@/components/ui/button";
 import { Trophy, TrendingUp, Target, Shield } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -64,6 +67,9 @@ const Index = () => {
         keywords="football predictions, betting tips, soccer predictions, football betting, premium tips, accumulator tips"
       />
       <Navigation />
+      
+      {/* Live Activity Notifications */}
+      <LiveActivityNotification />
 
       {/* Hero Section */}
       <section
@@ -162,8 +168,22 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Trust Seals Section */}
+      <section className="py-12 md:py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <TrustSeals />
+        </div>
+      </section>
+
       {/* Testimonials Section */}
       <Testimonials />
+
+      {/* Featured In Section */}
+      <section className="py-12 md:py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <FeaturedIn />
+        </div>
+      </section>
 
       {/* FAQ Section */}
       <FAQ />

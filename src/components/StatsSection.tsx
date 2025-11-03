@@ -1,13 +1,15 @@
 import { TrendingUp, Target, Award, Users, Star, Zap, Crown, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 const StatsSection = () => {
   const navigate = useNavigate();
   const stats = [
     {
       icon: TrendingUp,
-      value: "89%",
+      value: 89,
+      suffix: "%",
       label: "Success Rate",
       description: "Average win rate across all packages",
       color: "text-emerald-600",
@@ -17,7 +19,8 @@ const StatsSection = () => {
     },
     {
       icon: Target,
-      value: "2,500+",
+      value: 2500,
+      suffix: "+",
       label: "Predictions Made",
       description: "Total predictions delivered to members",
       color: "text-blue-600",
@@ -27,7 +30,9 @@ const StatsSection = () => {
     },
     {
       icon: Award,
-      value: "3.2x",
+      value: 3.2,
+      suffix: "x",
+      decimals: 1,
       label: "Average ROI",
       description: "Return on investment for Gold package",
       color: "text-amber-600",
@@ -37,7 +42,8 @@ const StatsSection = () => {
     },
     {
       icon: Users,
-      value: "82",
+      value: 2500,
+      suffix: "+",
       label: "Active Members",
       description: "Trusted by thousands worldwide",
       color: "text-purple-600",
@@ -153,7 +159,12 @@ const StatsSection = () => {
               </div>
 
               <div className="text-5xl md:text-6xl font-bold mb-3 group-hover:scale-105 transition-transform duration-300 text-foreground">
-                {stat.value}
+                <AnimatedCounter 
+                  end={stat.value} 
+                  suffix={stat.suffix} 
+                  decimals={stat.decimals || 0}
+                  duration={2500}
+                />
               </div>
               <div className="text-xl font-semibold mb-2 text-foreground/90">{stat.label}</div>
               <p className="text-sm text-muted-foreground leading-relaxed">
