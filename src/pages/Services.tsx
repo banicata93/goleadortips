@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SubscriptionCard from "@/components/SubscriptionCard";
+import TrustBadges from "@/components/TrustBadges";
 import SEO from "@/components/SEO";
 
 const Services = () => {
@@ -70,6 +71,11 @@ const Services = () => {
             <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
               Select the subscription that matches your ambitions and start winning today
             </p>
+          </div>
+
+          {/* Trust Badges - Compact Version */}
+          <div className="mb-10 md:mb-16">
+            <TrustBadges variant="compact" />
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto mb-10 md:mb-16">

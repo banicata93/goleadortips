@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import TrustBadges from "@/components/TrustBadges";
 import { Users, Target, TrendingUp, Shield, Award, Clock } from "lucide-react";
 
 const About = () => {
@@ -86,6 +87,13 @@ const About = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Trust Badges Section */}
+      <section className="py-12 md:py-16 bg-background border-y border-border">
+        <div className="container mx-auto px-4">
+          <TrustBadges />
         </div>
       </section>
 

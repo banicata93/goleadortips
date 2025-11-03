@@ -6,6 +6,7 @@ import Testimonials from "@/components/Testimonials";
 import StatsSection from "@/components/StatsSection";
 import FAQ from "@/components/FAQ";
 import SEO from "@/components/SEO";
+import TrustBadges from "@/components/TrustBadges";
 import { Button } from "@/components/ui/button";
 import { Trophy, TrendingUp, Target, Shield } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -97,6 +98,13 @@ const Index = () => {
 
       {/* Stats Section */}
       <StatsSection />
+
+      {/* Trust Badges Section */}
+      <section className="py-8 md:py-12 bg-background border-y border-border">
+        <div className="container mx-auto px-4">
+          <TrustBadges />
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="py-10 sm:py-12 md:py-16 lg:py-20 bg-card">
