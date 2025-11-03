@@ -102,8 +102,8 @@ const SubscriptionCard = ({
         ))}
       </ul>
 
-      {/* Urgency Timer - показва се само за Silver tier */}
-      {tier === "silver" && (
+      {/* Urgency Timer - показва се само за Gold tier */}
+      {tier === "gold" && (
         <div className="mb-4">
           <UrgencyTimer tier={tier} />
         </div>

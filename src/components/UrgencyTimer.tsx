@@ -7,7 +7,7 @@ interface UrgencyTimerProps {
 }
 
 const UrgencyTimer = ({ tier = "silver", className = "" }: UrgencyTimerProps) => {
-  const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(120 * 60); // 120 minutes (2 hours) in seconds
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -29,8 +29,8 @@ const UrgencyTimer = ({ tier = "silver", className = "" }: UrgencyTimerProps) =>
       
       setTimeLeft(remaining);
     } else {
-      // Start new timer
-      endTime = Date.now() + (30 * 60 * 1000);
+      // Start new timer - 2 hours
+      endTime = Date.now() + (120 * 60 * 1000);
       localStorage.setItem(timerKey, endTime.toString());
     }
 
