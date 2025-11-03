@@ -11,14 +11,15 @@ const Services = () => {
       description: "Kickstart Your Predictions ⚽",
       odds: "Around 1.70-1.90",
       features: [
-        "Daily curated soccer predictions",
-        "Access to standard match insights",
+        "Daily soccer predictions",
+        "Basic match information",
         "Reliable, easy-to-follow forecasts",
         "Affordable entry-level subscription",
-        "Email support",
+        "Email and Telegram support",
+        "Suitable for players using system bets"
       ],
       fullDescription:
-        "Ideal for beginners who want consistent tips without overwhelming complexity. Kick off your winning streak today!",
+        "Ideal for beginners and system bet players looking for reliable matches to boost their winnings. Get consistent, easy-to-follow predictions and start your winning streak today!",
     },
     {
       tier: "gold" as const,
@@ -26,14 +27,14 @@ const Services = () => {
       description: "Step Up Your Game 🏆",
       odds: "Around 3.00-4.00",
       features: [
-        "All Silver benefits included",
+        "Key benefits included",
         "Exclusive access to high-confidence predictions",
         "Weekly performance summary & stats",
         "Priority support and tips directly from the expert team",
         "Advanced match analysis",
       ],
       fullDescription:
-        "Elevate your football predictions. Be ahead of the game and enjoy smarter, more profitable forecasts.",
+        "Stay one step ahead of the game and enjoy smarter, strategic, and more profitable forecasts. Unlock new winning opportunities using data, statistics, and expert analysis, and turn every week into a streak of successful matches!",
     },
     {
       tier: "platinum" as const,
@@ -41,7 +42,7 @@ const Services = () => {
       description: "The VIP Experience 🔥",
       odds: "Around 8.00-10.00",
       features: [
-        "All Gold benefits included",
+        "Included premium features",
         "Access to VIP predictions for top matches",
         "Personalized alerts and updates",
         "Detailed analytics for each match",

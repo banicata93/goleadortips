@@ -15,19 +15,19 @@ const Index = () => {
     {
       tier: "silver" as const,
       title: "Silver",
-      features: ["Daily predictions", "Standard insights", "Email support"],
+      features: ["Daily predictions", "Standard insights", "Email and Telegram support"],
       description: "Perfect for beginners",
     },
     {
       tier: "gold" as const,
       title: "Gold",
-      features: ["All Silver features", "High-confidence tips", "Priority support"],
-      description: "Most popular choice",
+      features: ["Everything you need for top-tier predictions", "High-confidence tips", "Priority support"],
+      description: "For those who know what they want:",
     },
     {
       tier: "platinum" as const,
       title: "Platinum",
-      features: ["All Gold features", "VIP predictions", "24/7 support"],
+      features: ["Everything you need", "Exclusive predictions", "Always-on help"],
       description: "For professionals",
     },
   ];

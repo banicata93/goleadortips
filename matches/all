@@ -1,0 +1,132 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+# 1. Зареждане на данните
+print("🔍 Зареждане на данните...")
+try:
+    df = pd.read_csv('premier_league_ml_data.csv')
+    print(f"✅ Успешно заредени {len(df)} реда")
+    
+    # 2. Преглед на данните
+    print("\n📊 Преглед на данните:")
+    print(df[['home_team_name', 'away_team_name', 'home_score', 'away_score']].head())
+    
+    # 3. Подготовка на данните
+    print("\n⚙️ Подготовка на данните...")
+    numeric_columns = [
+        'home_score', 'away_score',
+        'home_possession', 'home_shots', 'home_shots_on_target', 'home_xg',
+        'away_possession', 'away_shots', 'away_shots_on_target', 'away_xg'
+    ]
+    df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
+
+    # Създаваме целевата променлива (1 ако домакините печелят, 0 иначе)
+    df['home_win'] = (df['home_score'] > df['away_score']).astype(int)
+    
+    # Избираме характеристиките за модела
+    features = ['home_possession', 'home_shots', 'home_xg', 'away_possession', 'away_shots', 'away_xg']
+    X = df[features].fillna(0)  # Заместваме липсващите стойности с 0
+    y = df['home_win']
+
+    feature_means = X.mean()
+
+    print("\n📊 Изчисляване на средни показатели за отборите...")
+    home_columns = ['home_possession', 'home_shots', 'home_xg']
+    away_columns = ['away_possession', 'away_shots', 'away_xg']
+
+    home_team_stats = df.groupby('home_team_name')[home_columns].mean()
+    away_team_stats = df.groupby('away_team_name')[away_columns].mean()
+
+    team_stats = home_team_stats.join(away_team_stats, how='outer')
+    for column in team_stats.columns:
+        team_stats[column] = team_stats[column].fillna(feature_means[column])
+    
+    available_teams = sorted(team_stats.index.unique())
+    print(f"Намерени са средни показатели за {len(available_teams)} отбора")
+    
+    # Разделяме данните на обучаващо и тестово множество
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    print(f"✅ Данните са подготвени за обучение")
+    print(f"   - Брой примери за обучение: {len(X_train)}")
+    print(f"   - Брой примери за тестване: {len(X_test)}")
+    
+    # 4. Обучение на модела
+    print("\n🤖 Обучение на модел...")
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    model.fit(X_train, y_train)
+    print("✅ Моделът е обучен успешно!")
+    
+    # 5. Оценка на модела
+    print("\n📊 Оценка на модела:")
+    
+    # Предсказване върху тестовите данни
+    y_pred = model.predict(X_test)
+    
+    # Изчисляване на точност
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Точност на модела: {accuracy:.2%}")
+    
+    # Детайлен отчет
+    print("\n📈 Детайлен отчет:")
+    print(classification_report(y_test, y_pred, target_names=['Загуба/Равен', 'Победа за домакините']))
+    
+    # Важност на характеристиките
+    print("\n🔝 Най-важни характеристики за предсказването:")
+    feature_importance = pd.Series(model.feature_importances_, index=features).sort_values(ascending=False)
+    print(feature_importance)
+
+    def get_team_feature_slice(team_name: str, columns: list[str]) -> pd.Series:
+        if team_name in team_stats.index:
+            values = team_stats.loc[team_name, columns]
+            if isinstance(values, pd.Series):
+                return values.fillna(feature_means[columns])
+            # Ако резултатът е DataFrame (рядък случай), взимаме първия ред
+            return values.iloc[0].fillna(feature_means[columns])
+        return feature_means[columns]
+
+    def predict_upcoming_matches(fixtures: list[dict[str, str]]):
+        if not fixtures:
+            print("\nℹ️ Няма подадени предстоящи мачове за прогнозиране.")
+            return
+
+        print("\n🔮 Прогнози за предстоящи мачове:")
+        for fixture in fixtures:
+            home_team = fixture['home']
+            away_team = fixture['away']
+
+            home_values = get_team_feature_slice(home_team, home_columns)
+            away_values = get_team_feature_slice(away_team, away_columns)
+
+            match_features = pd.DataFrame([
+                {
+                    'home_possession': home_values['home_possession'],
+                    'home_shots': home_values['home_shots'],
+                    'home_xg': home_values['home_xg'],
+                    'away_possession': away_values['away_possession'],
+                    'away_shots': away_values['away_shots'],
+                    'away_xg': away_values['away_xg'],
+                }
+            ])
+
+            probabilities = model.predict_proba(match_features)[0]
+            home_win_prob = probabilities[1]
+            predicted_label = 'Победа за домакините' if home_win_prob >= 0.5 else 'Загуба/Равен'
+
+            print(
+                f"- {home_team} vs {away_team}: {home_win_prob:.1%} шанс за победа на домакините → {predicted_label}"
+            )
+
+    # Примерен списък от предстоящи мачове (заменете с реални срещи)
+    upcoming_fixtures = [
+        {"home": "Tottenham", "away": "Chelsea"},
+        {"home": "Liverpool", "away": "Manchester City"},
+        {"home": "Tottenham", "away": "Newcastle"},
+    ]
+
+    predict_upcoming_matches(upcoming_fixtures)
+    
+except Exception as e:
+    print(f"❌ Грешка при изпълнение: {e}")
