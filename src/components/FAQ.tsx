@@ -20,8 +20,8 @@ const FAQ = () => {
     {
       question: "How do I receive the predictions?",
       answer:
-        "After subscribing, you will receive the predictions via email and through our dedicated Telegram group.         ",
-
+        "After subscribing, you will receive the predictions via email and through our dedicated Telegram group. All predictions are delivered before the match kickoff.",
+    },
     {
       question: "Do you offer a money-back guarantee?",
       answer:
