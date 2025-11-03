@@ -20,17 +20,12 @@ const FAQ = () => {
     {
       question: "How do I receive the predictions?",
       answer:
-        "After subscribing, you'll receive predictions via email and through your member dashboard. Gold and Platinum members also get SMS alerts for time-sensitive tips. All predictions are delivered before match kickoff.",
-    },
-    {
-      question: "Can I cancel my subscription anytime?",
-      answer:
-        "Yes, you can cancel your subscription at any time. There are no long-term commitments. Your access will continue until the end of your current billing period.",
-    },
+        "After subscribing, you will receive the predictions via email and through our dedicated Telegram group.         ",
+
     {
       question: "Do you offer a money-back guarantee?",
       answer:
-        "We offer a 7-day satisfaction guarantee for first-time subscribers. If you're not satisfied with our service within the first week, contact us for a full refund.",
+        "No refunds are provided. All payments are final and non-refundable.",
     },
     {
       question: "How are the predictions made?",
@@ -45,17 +40,17 @@ const FAQ = () => {
     {
       question: "Is betting legal in my country?",
       answer:
-        "Betting laws vary by country and region. It's your responsibility to ensure that sports betting is legal in your jurisdiction before subscribing. We recommend checking local regulations.",
+        "Betting laws vary by country and region. It is your responsibility to ensure that sports betting is legal in your jurisdiction before subscribing. We recommend checking local regulations. We do not encourage gambling – we provide predictions based solely on data and statistics.",
     },
     {
       question: "Can I upgrade or downgrade my package?",
       answer:
-        "Yes, you can change your package at any time. Upgrades take effect immediately, while downgrades will apply at the start of your next billing cycle.",
+        "Yes, you can change your package at any time.",
     },
     {
       question: "Do you provide betting advice or just predictions?",
       answer:
-        "We provide predictions with detailed analysis and reasoning. However, we don't offer personalized betting advice. All members should bet responsibly and within their means.",
+        "We provide predictions with detailed analysis and reasoning. However, we do not offer personalized betting advice. All members should bet responsibly and within their means. Gold and Platinum subscribers receive bankroll management guidance.",
     },
   ];
 

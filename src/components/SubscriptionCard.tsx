@@ -42,13 +42,22 @@ const SubscriptionCard = ({
   };
 
   const paypalLinks = {
-    silver: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=NEPYT72VXLE64",
-    gold: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RZW56CJUMW94Q",
-    platinum: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CWS96VXJJ5XTE",
+    silver: {
+      daily: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=NEPYT72VXLE64",
+      "15days": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UV7KQZ9XFTTD4",
+    },
+    gold: {
+      daily: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RZW56CJUMW94Q",
+      "15days": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQH5PCNXDXRQA",
+    },
+    platinum: {
+      daily: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CWS96VXJJ5XTE",
+      "15days": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D8GE6G9CFA6FL",
+    },
   };
 
   const handlePayPalClick = () => {
-    window.open(paypalLinks[tier], '_blank');
+    window.open(paypalLinks[tier][period], '_blank');
   };
 
   return (
