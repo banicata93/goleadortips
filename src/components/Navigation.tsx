@@ -50,19 +50,19 @@ const Navigation = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 sm:px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-          <Link to="/" className="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
-            <img src={logo} alt="GoLeadorTips Logo" className="h-8 w-8 md:h-12 md:w-12" />
-            <span className="text-lg md:text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          <Link to="/" className="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity flex-shrink-0">
+            <img src={logo} alt="GoLeadorTips Logo" className="h-7 w-7 sm:h-8 sm:w-8 md:h-12 md:w-12" />
+            <span className="text-base sm:text-lg md:text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent whitespace-nowrap">
               GoLeadorTips
             </span>
           </Link>
 
-          <div className="flex items-center gap-3 md:gap-6">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-6">
             <Link
               to="/"
-              className={`text-xs md:text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-xs sm:text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
                 isActive("/") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -70,7 +70,7 @@ const Navigation = () => {
             </Link>
             <Link
               to="/services"
-              className={`text-xs md:text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-xs sm:text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
                 isActive("/services") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -78,7 +78,7 @@ const Navigation = () => {
             </Link>
             <Link
               to="/archives"
-              className={`hidden sm:block text-xs md:text-sm font-medium transition-colors hover:text-primary ${
+              className={`hidden sm:block text-xs md:text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
                 isActive("/archives") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -86,7 +86,7 @@ const Navigation = () => {
             </Link>
             <Link
               to="/archives"
-              className={`sm:hidden text-xs md:text-sm font-medium transition-colors hover:text-primary ${
+              className={`sm:hidden text-xs font-medium transition-colors hover:text-primary whitespace-nowrap ${
                 isActive("/archives") ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -96,13 +96,19 @@ const Navigation = () => {
             <ThemeToggle />
 
             {user && isAdmin && (
-              <div className="flex items-center gap-3">
-                <Button asChild variant="secondary" size="sm">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Button asChild variant="secondary" size="sm" className="hidden md:flex">
                   <Link to="/admin">Admin Panel</Link>
                 </Button>
-                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <Button asChild variant="secondary" size="sm" className="md:hidden">
+                  <Link to="/admin">Admin</Link>
+                </Button>
+                <Button variant="ghost" size="sm" onClick={handleLogout} className="hidden sm:flex">
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
+                </Button>
+                <Button variant="ghost" size="icon" onClick={handleLogout} className="sm:hidden">
+                  <LogOut className="h-4 w-4" />
                 </Button>
               </div>
             )}
