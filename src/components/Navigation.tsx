@@ -77,12 +77,20 @@ const Navigation = () => {
               Services
             </Link>
             <Link
+              to="/about"
+              className={`hidden md:block text-xs md:text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
+                isActive("/about") ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              About
+            </Link>
+            <Link
               to="/archives"
               className={`hidden sm:block text-xs md:text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
                 isActive("/archives") ? "text-primary" : "text-muted-foreground"
               }`}
             >
-              Archives & Contact
+              Archives
             </Link>
             <Link
               to="/archives"
