@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import UrgencyTimer from "@/components/UrgencyTimer";
 
 interface SubscriptionCardProps {
   tier: "silver" | "gold" | "platinum";
@@ -100,6 +101,13 @@ const SubscriptionCard = ({
           </li>
         ))}
       </ul>
+
+      {/* Urgency Timer - показва се само за Silver tier */}
+      {tier === "silver" && (
+        <div className="mb-4">
+          <UrgencyTimer tier={tier} />
+        </div>
+      )}
 
       <Button
         variant={tier}
