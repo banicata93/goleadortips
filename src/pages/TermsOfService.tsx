@@ -29,7 +29,10 @@ const TermsOfService = () => {
             <section>
               <h2 className="text-2xl font-semibold mb-4">2. Service Description</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                GoLeadorTips provides premium football prediction services across three subscription tiers: Silver, Gold, and Platinum. Our predictions are based on statistical analysis and expert insights.
+                GoLeadorTips provides premium football prediction services across three subscription tiers: Silver, Gold, and Platinum. Our predictions are based on advanced statistical models, team form analysis, head-to-head records, injury reports, and expert insights.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Predictions are delivered daily via email and through our dedicated Telegram group before match kickoff.
               </p>
               <p className="text-muted-foreground leading-relaxed font-semibold">
                 IMPORTANT: All predictions are for informational and entertainment purposes only. We do not guarantee wins or specific outcomes.
@@ -40,21 +43,21 @@ const TermsOfService = () => {
               <h2 className="text-2xl font-semibold mb-4">3. Subscription and Payments</h2>
               <div className="text-muted-foreground leading-relaxed space-y-4">
                 <p>
-                  <strong>3.1 Payment Processing:</strong> All payments are processed securely through PayPal. By subscribing, you authorize recurring payments according to your chosen plan.
+                  <strong>3.1 Payment Processing:</strong> All payments are processed securely through PayPal. We offer both daily and 15-day subscription options for each tier. By subscribing, you authorize payments according to your chosen plan.
                 </p>
                 <p>
                   <strong>3.2 Subscription Tiers:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Silver Package: 1 prediction/week with odds around 1.70-1.90</li>
-                  <li>Gold Package: 1 prediction/week with odds around 3-4</li>
-                  <li>Platinum Package: 1 prediction/week with odds around 8-10</li>
+                  <li>Silver Package: Daily predictions with odds around 1.70-1.90 (€39/day or €390/15 days)</li>
+                  <li>Gold Package: Daily predictions with odds around 3.00-4.00, includes weekly performance summaries and priority support (€59/day or €590/15 days)</li>
+                  <li>Platinum Package: Daily VIP predictions with odds around 8.00-10.00, includes personalized alerts, detailed analytics, and 24/7 dedicated support (€99/day or €990/15 days)</li>
                 </ul>
                 <p>
-                  <strong>3.3 Refunds:</strong> Due to the nature of our service (time-sensitive predictions), refunds are generally not available once predictions have been delivered. Contact us for exceptional circumstances.
+                  <strong>3.3 Refunds:</strong> All payments are final and non-refundable. Due to the nature of our service (time-sensitive predictions delivered before match kickoff), we cannot offer refunds once predictions have been delivered.
                 </p>
                 <p>
-                  <strong>3.4 Cancellation:</strong> You may cancel your subscription at any time. Access will continue until the end of your current billing period.
+                  <strong>3.4 Subscription Changes:</strong> You may upgrade or downgrade your package at any time. Changes will take effect according to your billing cycle.
                 </p>
               </div>
             </section>

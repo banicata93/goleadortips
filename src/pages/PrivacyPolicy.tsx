@@ -25,9 +25,11 @@ const PrivacyPolicy = () => {
                 At GoLeadorTips, we are committed to protecting your privacy. We collect minimal information necessary to provide our football prediction services:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>Email address for account creation and communication</li>
+                <li>Email address for account creation and delivery of predictions</li>
+                <li>Telegram username/ID for delivery of predictions through our dedicated Telegram group</li>
                 <li>Payment information processed securely through PayPal (we do not store payment details)</li>
-                <li>Usage data and preferences to improve our service</li>
+                <li>Subscription tier and preferences to provide appropriate service level</li>
+                <li>Usage data to improve our prediction algorithms and user experience</li>
                 <li>Cookies for site functionality and user experience</li>
               </ul>
             </section>
@@ -38,11 +40,14 @@ const PrivacyPolicy = () => {
                 Your information is used exclusively for:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>Providing access to premium football prediction services</li>
+                <li>Delivering daily football predictions via email and Telegram</li>
                 <li>Processing subscription payments through PayPal</li>
-                <li>Sending service updates and prediction notifications</li>
+                <li>Providing access to our dedicated Telegram group for subscribers</li>
+                <li>Sending prediction notifications, match alerts, and service updates</li>
+                <li>Providing weekly performance summaries (Gold and Platinum tiers)</li>
+                <li>Offering personalized alerts and analytics (Platinum tier)</li>
                 <li>Improving our prediction algorithms and user experience</li>
-                <li>Responding to customer support inquiries</li>
+                <li>Responding to customer support inquiries (email for Silver, priority for Gold, 24/7 for Platinum)</li>
               </ul>
             </section>
 
@@ -62,7 +67,8 @@ const PrivacyPolicy = () => {
                 We do not sell, trade, or share your personal information with third parties except:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4 mt-4">
-                <li>PayPal for payment processing</li>
+                <li>PayPal for secure payment processing</li>
+                <li>Telegram for delivering predictions to our private subscriber group</li>
                 <li>When required by law or legal process</li>
                 <li>To protect our rights, property, or safety</li>
               </ul>
