@@ -85,56 +85,56 @@ const UrgencyTimer = ({ tier = "silver", className = "" }: UrgencyTimerProps) =>
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      <div className={`${offer.bgColor} ${offer.borderColor} border-2 rounded-xl p-4 backdrop-blur-sm animate-pulse-slow`}>
-        <div className="flex items-start gap-3">
+      <div className={`${offer.bgColor} ${offer.borderColor} border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 backdrop-blur-sm animate-pulse-slow`}>
+        <div className="flex items-start gap-2 sm:gap-3">
           {/* Icon */}
-          <div className={`flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br ${offer.color} flex items-center justify-center animate-bounce-slow`}>
-            <Gift className="w-6 h-6 text-white" />
+          <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br ${offer.color} flex items-center justify-center animate-bounce-slow`}>
+            <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <Zap className="w-4 h-4 text-amber-500 animate-pulse" />
-              <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
+              <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 animate-pulse" />
+              <h3 className="text-xs sm:text-sm font-bold text-foreground uppercase tracking-wide">
                 {offer.title}
               </h3>
             </div>
             
-            <p className="text-xs text-muted-foreground mb-2">
+            <p className="text-[10px] sm:text-xs text-muted-foreground mb-2">
               {offer.description}
             </p>
 
             {/* Timer */}
-            <div className="flex items-center gap-3 mb-2">
-              <Clock className="w-4 h-4 text-primary" />
-              <div className="flex items-center gap-1">
-                <div className={`bg-gradient-to-br ${offer.color} text-white px-3 py-1 rounded-lg font-bold text-lg min-w-[3rem] text-center`}>
+            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
+              <div className="flex items-center gap-0.5 sm:gap-1">
+                <div className={`bg-gradient-to-br ${offer.color} text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-md sm:rounded-lg font-bold text-base sm:text-lg min-w-[2.5rem] sm:min-w-[3rem] text-center`}>
                   {String(minutes).padStart(2, '0')}
                 </div>
-                <span className="text-lg font-bold text-foreground">:</span>
-                <div className={`bg-gradient-to-br ${offer.color} text-white px-3 py-1 rounded-lg font-bold text-lg min-w-[3rem] text-center`}>
+                <span className="text-base sm:text-lg font-bold text-foreground">:</span>
+                <div className={`bg-gradient-to-br ${offer.color} text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-md sm:rounded-lg font-bold text-base sm:text-lg min-w-[2.5rem] sm:min-w-[3rem] text-center`}>
                   {String(seconds).padStart(2, '0')}
                 </div>
               </div>
             </div>
 
             {/* Bonus */}
-            <div className={`inline-flex items-center gap-2 bg-gradient-to-r ${offer.color} text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-lg`}>
-              <Gift className="w-4 h-4" />
-              {offer.bonus}
+            <div className={`inline-flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r ${offer.color} text-white px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg text-xs sm:text-sm font-bold shadow-lg`}>
+              <Gift className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="whitespace-nowrap">{offer.bonus}</span>
             </div>
           </div>
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-2xl"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-white/5 to-transparent rounded-full blur-xl"></div>
+        <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-2xl"></div>
+        <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-tr from-white/5 to-transparent rounded-full blur-xl"></div>
       </div>
 
       {/* Urgency text */}
-      <div className="text-center mt-2">
-        <p className="text-xs text-muted-foreground italic">
+      <div className="text-center mt-1.5 sm:mt-2">
+        <p className="text-[10px] sm:text-xs text-muted-foreground italic">
           ⚡ Offer expires in {minutes} {minutes === 1 ? 'minute' : 'minutes'}
         </p>
       </div>
