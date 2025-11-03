@@ -56,25 +56,25 @@ const UrgencyTimer = ({ tier = "silver", className = "" }: UrgencyTimerProps) =>
 
   const offers = {
     silver: {
-      title: "🎁 СПЕЦИАЛНА ОФЕРТА",
-      description: "Поръчай Silver пакет в следващите",
-      bonus: "+1 БЕЗПЛАТНА ПРОГНОЗА",
+      title: "🎁 SPECIAL OFFER",
+      description: "Order Silver package in the next",
+      bonus: "+1 FREE PREDICTION",
       color: "from-blue-500 to-blue-600",
       bgColor: "bg-blue-500/10",
       borderColor: "border-blue-500/30",
     },
     gold: {
-      title: "🎁 СПЕЦИАЛНА ОФЕРТА",
-      description: "Поръчай Gold пакет в следващите",
-      bonus: "+2 БЕЗПЛАТНИ ПРОГНОЗИ",
+      title: "🎁 SPECIAL OFFER",
+      description: "Order Gold package in the next",
+      bonus: "+2 FREE PREDICTIONS",
       color: "from-amber-500 to-amber-600",
       bgColor: "bg-amber-500/10",
       borderColor: "border-amber-500/30",
     },
     platinum: {
-      title: "🎁 VIP ОФЕРТА",
-      description: "Поръчай Platinum пакет в следващите",
-      bonus: "+3 БЕЗПЛАТНИ VIP ПРОГНОЗИ",
+      title: "🎁 VIP OFFER",
+      description: "Order Platinum package in the next",
+      bonus: "+3 FREE VIP PREDICTIONS",
       color: "from-purple-500 to-purple-600",
       bgColor: "bg-purple-500/10",
       borderColor: "border-purple-500/30",
@@ -135,7 +135,7 @@ const UrgencyTimer = ({ tier = "silver", className = "" }: UrgencyTimerProps) =>
       {/* Urgency text */}
       <div className="text-center mt-2">
         <p className="text-xs text-muted-foreground italic">
-          ⚡ Офертата изтича след {minutes} {minutes === 1 ? 'минута' : 'минути'}
+          ⚡ Offer expires in {minutes} {minutes === 1 ? 'minute' : 'minutes'}
         </p>
       </div>
     </div>
