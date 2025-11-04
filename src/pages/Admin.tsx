@@ -975,8 +975,11 @@ const Admin = () => {
               </div>
 
               <div className="space-y-4">
-                {filteredPredictions.map((prediction) => (
-                  <Card key={prediction.id} className="p-4 hover:shadow-md transition-shadow">
+                {filteredPredictions.map((prediction) => {
+                  const isLoss = prediction.result?.includes('LOSS') || prediction.result?.includes('❌');
+                  
+                  return (
+                  <Card key={prediction.id} className={`p-4 hover:shadow-md transition-shadow ${isLoss ? 'bg-red-50/50 dark:bg-red-950/20' : ''}`}>
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
@@ -1068,7 +1071,8 @@ const Admin = () => {
                       )}
                     </div>
                   </Card>
-                ))}
+                  );
+                })}
 
                 {filteredPredictions.length === 0 && predictions.length > 0 && (
                   <div className="text-center py-8 text-muted-foreground">

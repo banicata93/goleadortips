@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
-import { AlertCircle, RefreshCw, Calendar, Target } from "lucide-react";
+import { AlertCircle, RefreshCw, Calendar, Target, Lock } from "lucide-react";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
@@ -201,8 +201,82 @@ const Archives = () => {
     }
   };
 
-  const renderPredictionCard = (prediction: Prediction) => (
-    <Card key={prediction.id} className="p-4 md:p-6 mb-4 hover:shadow-lg transition-all duration-300 border-l-4 border-l-primary/20 hover:border-l-primary animate-fade-in">
+  const renderLockedTodayCard = (tier: string) => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    return (
+      <Card className="p-4 md:p-6 mb-4 relative overflow-hidden border-l-4 border-l-primary animate-fade-in">
+        {/* Lock Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-[2px] z-10 flex items-center justify-center">
+          <div className="text-center">
+            <Lock className="w-12 h-12 mx-auto mb-3 text-primary" />
+            <p className="text-lg font-semibold mb-1">Today's Prediction</p>
+            <p className="text-sm text-muted-foreground">Subscribe to unlock</p>
+          </div>
+        </div>
+
+        {/* Blurred Content */}
+        <div className="filter blur-sm select-none pointer-events-none">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm font-medium text-muted-foreground">
+                  {new Date(today).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-primary" />
+                <Badge variant="outline" className="text-lg font-bold">
+                  Total Odds: 3.45
+                </Badge>
+              </div>
+            </div>
+            <Badge variant="default" className="text-lg px-3 py-1 bg-yellow-500">
+              PENDING
+            </Badge>
+          </div>
+
+          <div className="space-y-2">
+            <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+              Predictions (3 matches)
+            </h4>
+            <div className="grid gap-2">
+              {[1, 2, 3].map((idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between p-3 rounded-lg bg-card border"
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm">████████ vs ████████</p>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <Badge variant="secondary" className="font-semibold">
+                      ████████
+                    </Badge>
+                    <Badge variant="outline" className="font-bold min-w-[50px] justify-center">
+                      █.██
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Card>
+    );
+  };
+
+  const renderPredictionCard = (prediction: Prediction) => {
+    const isLoss = prediction.result?.includes('LOSS') || prediction.result?.includes('❌');
+    
+    return (
+    <Card key={prediction.id} className={`p-4 md:p-6 mb-4 hover:shadow-lg transition-all duration-300 border-l-4 border-l-primary/20 hover:border-l-primary animate-fade-in ${isLoss ? 'bg-red-50/50 dark:bg-red-950/20' : ''}`}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
         <div className="flex-1">
@@ -271,7 +345,8 @@ const Archives = () => {
         </div>
       </div>
     </Card>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -330,15 +405,19 @@ const Archives = () => {
 
                 {Object.entries(predictions).map(([tier, archives]) => (
                   <TabsContent key={tier} value={tier}>
-                    {archives.length === 0 ? (
-                      <Card className="p-12 text-center">
-                        <p className="text-muted-foreground">No predictions yet</p>
-                      </Card>
-                    ) : (
-                      <div className="space-y-4">
-                        {archives.map(renderPredictionCard)}
-                      </div>
-                    )}
+                    <div className="space-y-4">
+                      {/* Always show locked today's prediction first */}
+                      {renderLockedTodayCard(tier)}
+                      
+                      {/* Then show past predictions */}
+                      {archives.length === 0 ? (
+                        <Card className="p-12 text-center">
+                          <p className="text-muted-foreground">No past predictions yet</p>
+                        </Card>
+                      ) : (
+                        archives.map(renderPredictionCard)
+                      )}
+                    </div>
                   </TabsContent>
                 ))}
               </Tabs>
