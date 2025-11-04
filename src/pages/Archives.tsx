@@ -30,6 +30,7 @@ type Prediction = {
     match_name: string;
     prediction: string;
     odds?: number;
+    match_result?: string;
   }[];
 };
 
@@ -322,10 +323,12 @@ const Archives = () => {
           Predictions ({prediction.matches.length} matches)
         </h4>
         <div className="grid gap-2">
-          {prediction.matches.map((match, idx) => (
+          {prediction.matches.map((match, idx) => {
+            const isMatchLoss = match.match_result === "LOSS";
+            return (
             <div
               key={idx}
-              className="flex items-center justify-between p-3 rounded-lg bg-card border hover:bg-accent/50 transition-colors"
+              className={`flex items-center justify-between p-3 rounded-lg bg-card border hover:bg-accent/50 transition-colors ${isMatchLoss ? 'bg-red-50/50 dark:bg-red-950/20 border-red-200 dark:border-red-900' : ''}`}
             >
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm truncate">{match.match_name}</p>
@@ -339,9 +342,15 @@ const Archives = () => {
                     {match.odds}
                   </Badge>
                 )}
+                {match.match_result && (
+                  <Badge variant={match.match_result === "WIN" ? "default" : "destructive"} className="text-xs">
+                    {match.match_result === "WIN" ? "✅" : "❌"}
+                  </Badge>
+                )}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </Card>

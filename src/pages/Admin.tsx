@@ -22,6 +22,7 @@ interface PredictionMatch {
   match_name: string;
   prediction: string;
   odds: number | null;
+  match_result?: string | null;
 }
 
 interface Prediction {
@@ -90,8 +91,9 @@ const Admin = () => {
     match_name: string;
     prediction: string;
     odds: string;
+    match_result: string;
   }>>([
-    { match_date: new Date().toISOString().split('T')[0], match_name: "", prediction: "", odds: "" }
+    { match_date: new Date().toISOString().split('T')[0], match_name: "", prediction: "", odds: "", match_result: "" }
   ]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
@@ -233,6 +235,7 @@ const Admin = () => {
               match_name: m.match_name,
               prediction: m.prediction,
               odds: m.odds ? parseFloat(m.odds) : null,
+              match_result: m.match_result || null,
             }))
           );
 
@@ -267,6 +270,7 @@ const Admin = () => {
               match_name: m.match_name,
               prediction: m.prediction,
               odds: m.odds ? parseFloat(m.odds) : null,
+              match_result: m.match_result || null,
             }))
           );
 
@@ -296,7 +300,7 @@ const Admin = () => {
       result: "",
       ticket_odds: "",
     });
-    setMatches([{ match_date: new Date().toISOString().split('T')[0], match_name: "", prediction: "", odds: "" }]);
+    setMatches([{ match_date: new Date().toISOString().split('T')[0], match_name: "", prediction: "", odds: "", match_result: "" }]);
     setEditingId(null);
   };
 
@@ -311,8 +315,9 @@ const Admin = () => {
       match_date: m.match_date,
       match_name: m.match_name,
       prediction: m.prediction,
-      odds: m.odds?.toString() || ""
-    })) || [{ match_date: "", match_name: "", prediction: "", odds: "" }]);
+      odds: m.odds?.toString() || "",
+      match_result: m.match_result || ""
+    })) || [{ match_date: "", match_name: "", prediction: "", odds: "", match_result: "" }]);
     setEditingId(prediction.id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -344,7 +349,7 @@ const Admin = () => {
   const addMatch = () => {
     // Use prediction_date for new matches
     const newMatchDate = formData.prediction_date || new Date().toISOString().split('T')[0];
-    setMatches([...matches, { match_date: newMatchDate, match_name: "", prediction: "", odds: "" }]);
+    setMatches([...matches, { match_date: newMatchDate, match_name: "", prediction: "", odds: "", match_result: "" }]);
   };
 
   const removeMatch = (index: number) => {
@@ -429,7 +434,8 @@ const Admin = () => {
       match_date: m.match_date,
       match_name: m.match_name,
       prediction: m.prediction,
-      odds: m.odds.toString()
+      odds: m.odds.toString(),
+      match_result: m.match_result || ""
     })));
     
     toast({
@@ -463,7 +469,8 @@ const Admin = () => {
         match_date: new Date().toISOString().split('T')[0],
         match_name: m.match_name,
         prediction: m.prediction,
-        odds: m.odds?.toString() || ""
+        odds: m.odds?.toString() || "",
+        match_result: ""
       })));
     }
     
@@ -890,6 +897,40 @@ const Admin = () => {
                               className="text-sm"
                             />
                           </div>
+                          <div>
+                            <label className="text-xs font-medium mb-1 block">Match Result</label>
+                            <div className="flex gap-1">
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant={match.match_result === "WIN" ? "default" : "outline"}
+                                className={`flex-1 text-xs ${match.match_result === "WIN" ? "bg-green-600 hover:bg-green-700" : ""}`}
+                                onClick={() => updateMatch(index, "match_result", "WIN")}
+                              >
+                                ✅
+                              </Button>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant={match.match_result === "LOSS" ? "default" : "outline"}
+                                className={`flex-1 text-xs ${match.match_result === "LOSS" ? "bg-red-600 hover:bg-red-700" : ""}`}
+                                onClick={() => updateMatch(index, "match_result", "LOSS")}
+                              >
+                                ❌
+                              </Button>
+                              {match.match_result && (
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => updateMatch(index, "match_result", "")}
+                                  title="Clear"
+                                >
+                                  <X className="h-3 w-3" />
+                                </Button>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </Card>
                     ))}
@@ -1049,8 +1090,10 @@ const Admin = () => {
                     <Separator className="my-3" />
 
                     <div className="space-y-2">
-                      {prediction.matches?.slice(0, 3).map((match, idx) => (
-                        <div key={idx} className="flex justify-between items-center text-sm py-1">
+                      {prediction.matches?.slice(0, 3).map((match, idx) => {
+                        const isMatchLoss = match.match_result === "LOSS";
+                        return (
+                        <div key={idx} className={`flex justify-between items-center text-sm py-1 px-2 rounded ${isMatchLoss ? 'bg-red-50/50 dark:bg-red-950/20' : ''}`}>
                           <span className="font-medium truncate flex-1">{match.match_name}</span>
                           <div className="flex items-center gap-2 ml-2">
                             <Badge variant="outline" className="text-xs">
@@ -1061,9 +1104,15 @@ const Admin = () => {
                                 {match.odds}
                               </span>
                             )}
+                            {match.match_result && (
+                              <Badge variant={match.match_result === "WIN" ? "default" : "destructive"} className="text-xs">
+                                {match.match_result === "WIN" ? "✅" : "❌"}
+                              </Badge>
+                            )}
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                       {prediction.matches && prediction.matches.length > 3 && (
                         <div className="text-xs text-muted-foreground text-center py-1">
                           +{prediction.matches.length - 3} more matches...

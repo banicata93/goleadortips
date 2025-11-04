@@ -20,6 +20,7 @@ export type Database = {
           id: string
           match_date: string
           match_name: string
+          match_result: string | null
           odds: number | null
           prediction: string
           prediction_id: string
@@ -29,6 +30,7 @@ export type Database = {
           id?: string
           match_date: string
           match_name: string
+          match_result?: string | null
           odds?: number | null
           prediction: string
           prediction_id: string
@@ -38,6 +40,7 @@ export type Database = {
           id?: string
           match_date?: string
           match_name?: string
+          match_result?: string | null
           odds?: number | null
           prediction?: string
           prediction_id?: string

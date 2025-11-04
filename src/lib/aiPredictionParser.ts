@@ -6,6 +6,7 @@ export interface AIPredictionMatch {
   match_name: string;
   prediction: string;
   odds: number;
+  match_result?: string;
 }
 
 export interface AIPrediction {
